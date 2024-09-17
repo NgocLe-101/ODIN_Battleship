@@ -1,3 +1,74 @@
 /* src/styles/index.css */
-*, *::after, *::before { box-sizing: border-box; }
-* { margin: 0; padding: 0; }
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+
+svg {
+  width: 50px;
+  height: 50px;
+}
+
+.container .header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
+.container .body {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.body > * {
+  width: 45svw;
+  margin-inline: auto;
+}
+
+.gameboard-wrapper {
+  padding: 1rem;
+}
+
+.board-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #000;
+}
+
+.mark-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.board {
+  width: 100%;
+  height: 70svh;
+}
+
+.board-cell {
+  cursor: pointer;
+}
+
+.board-cell:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.board-cell svg {
+  display: none;
+  width: 40%;
+  height: 40%;
+  fill: red;
+}
+
+.board-cell svg.active {
+  display: block;
+}
