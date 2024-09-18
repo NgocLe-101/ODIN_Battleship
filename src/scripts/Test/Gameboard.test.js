@@ -7,7 +7,7 @@ let shipInstance = null;
 
 beforeEach(() => {
   gameBoardInstance = new Gameboard(100);
-  shipInstance = new Ship(2);
+  shipInstance = new Ship(4, 2);
   shipInstance.hit();
 });
 
@@ -40,6 +40,12 @@ describe("Place ship", () => {
         x: 1,
         y: 1,
       })
+    ).toBeTruthy();
+    expect(
+      gameBoardInstance.getShipOnCoordinates({
+        x: 1,
+        y: 2,
+      })
     ).toBeNull();
   });
 });
@@ -71,29 +77,21 @@ describe("Receive attack", () => {
       y: 0,
     });
     expect(
-      gameBoardInstance
-        .getShipOnCoordinates({
-          x: 0,
-          y: 0,
-        })
-        .isSunk()
-    ).toBe(true);
-    expect(
       gameBoardInstance.getShipOnCoordinates({
-        x: 0,
-        y: 0,
+        x: 1,
+        y: 1,
       }).timesHit
-    ).toBe(2);
+    ).toBe(3);
   });
 
   test("Missed a shot", () => {
     gameBoardInstance.receiveAttack({
-      x: 1,
+      x: 2,
       y: 1,
     });
     expect(
       gameBoardInstance.hasShotMissedOnCoordinate({
-        x: 1,
+        x: 2,
         y: 1,
       })
     ).toBe(true);
@@ -112,8 +110,9 @@ describe("Receive attack", () => {
 
 describe("All ship sunk", () => {
   beforeEach(() => {
+    const ship1 = new Ship(1);
     const ship2 = new Ship(1);
-    gameBoardInstance.placeShip(shipInstance, {
+    gameBoardInstance.placeShip(ship1, {
       x: 0,
       y: 0,
     });

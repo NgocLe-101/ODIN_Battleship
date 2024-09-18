@@ -1,8 +1,12 @@
+import env from "./env";
+
 export default class Ship {
   #_length;
+  #_width;
   #_timesHit;
-  constructor(shipLength) {
-    this.#_length = shipLength;
+  constructor(shipLength, shipWidth) {
+    this.#_length = shipLength || env.config.shipLength;
+    this.#_width = shipWidth || env.config.shipWidth;
     this.#_timesHit = 0;
   }
 
@@ -12,6 +16,14 @@ export default class Ship {
 
   set length(value) {
     this.#_length = value;
+  }
+
+  get width() {
+    return this.#_width;
+  }
+
+  set width(value) {
+    this.#_width = value;
   }
 
   get timesHit() {
@@ -28,7 +40,11 @@ export default class Ship {
     }
   }
 
+  #__shipArea() {
+    return this.#_width * this.#_length;
+  }
+
   isSunk() {
-    return this.#_timesHit >= this.length;
+    return this.#_timesHit >= this.#__shipArea();
   }
 }

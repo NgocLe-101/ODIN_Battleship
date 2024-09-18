@@ -24,12 +24,12 @@ export default class Gameboard {
     }
   }
   #__isValidCoor(coor) {
-    return (
+    const isNotOutOfBoard =
       coor.x >= 0 &&
       coor.x < this.#_boardSize &&
       coor.y >= 0 &&
-      coor.y < this.#_boardSize
-    );
+      coor.y < this.#_boardSize;
+    return isNotOutOfBoard;
   }
   #__addShip(ship, coor, isVerticalPlaced) {
     this.#_shipsOnBoard.push({
@@ -51,8 +51,30 @@ export default class Gameboard {
   #__missedAShotAt(coordinate) {
     this.#_missedShots[coordinate.x][coordinate.y] = true;
   }
+  #__hasShipOnCoor(coordinates) {
+    const shipOnCoor = this.#_shipsOnBoard.filter((ship) =>
+      this.#__isCoordinateOnShip(coordinates, ship)
+    );
+    if (shipOnCoor.length === 0) return false;
+    return true;
+  }
+  #__isPlaceable(ship, coor, isVerticalPlaced) {
+    const validCoor = this.#__isValidCoor(coor);
+    const noShipOnCoor = !this.#__hasShipOnCoor(coor);
+    let shipNotOverflowBoard = false;
+    if (!isVerticalPlaced) {
+      shipNotOverflowBoard =
+        coor.x + ship.length < this.#_boardSize &&
+        coor.y + ship.width < this.#_boardSize;
+    } else {
+      shipNotOverflowBoard =
+        coor.y + ship.length < this.#_boardSize &&
+        coor.x + ship.width < this.#_boardSize;
+    }
+    return validCoor && noShipOnCoor && shipNotOverflowBoard;
+  }
   placeShip(ship, coor, isVerticalPlaced = false) {
-    if (this.#__isValidCoor(coor)) {
+    if (this.#__isPlaceable(ship, coor, isVerticalPlaced)) {
       this.#__addShip(ship, coor, isVerticalPlaced);
     }
   }
@@ -75,15 +97,17 @@ export default class Gameboard {
   #__isCoordinateOnShip(coordinate, ship) {
     if (ship.isVerticalPlaced) {
       return (
-        coordinate.y === ship.coor.y &&
+        coordinate.y >= ship.coor.y &&
+        coordinate.y <= ship.coor.y + ship.ship.width - 1 &&
         coordinate.x >= ship.coor.x &&
-        coordinate.x <= ship.coor.x + ship.ship.length
+        coordinate.x <= ship.coor.x + ship.ship.length - 1
       );
     }
     return (
-      coordinate.x === ship.coor.x &&
+      coordinate.x >= ship.coor.x &&
+      coordinate.x <= ship.coor.x + ship.ship.width - 1 &&
       coordinate.y >= ship.coor.y &&
-      coordinate.y <= ship.coor.y + ship.ship.length
+      coordinate.y <= ship.coor.y + ship.ship.length - 1
     );
   }
   getShipOnCoordinates(coordinate) {

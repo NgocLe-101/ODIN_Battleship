@@ -18,8 +18,11 @@ function createGameboardCell(coordinates) {
   return div;
 }
 
-function createGameboardDOM() {
+function createGameboardDOM(board) {
   const size = env.config.boardSize;
+  if (board !== undefined) {
+    size = board.size;
+  }
   const div = document.createElement("div");
   div.classList.add("board");
   div.setAttribute(
@@ -75,7 +78,14 @@ function renderInfos() {
   renderBotInfo();
 }
 
-function renderGameboards() {
+function renderGameboards(leftGameBoard, rightGameBoard) {
+  const leftGB = document.querySelector(".body .left .gameboard-wrapper");
+  const rightGB = document.querySelector(".body .right .gameboard-wrapper");
+  leftGB.appendChild(createGameboardDOM(leftGameBoard));
+  rightGB.appendChild(createGameboardDOM(rightGameBoard));
+}
+
+function renderBlankGameboards() {
   const leftGB = document.querySelector(".body .left .gameboard-wrapper");
   const rightGB = document.querySelector(".body .right .gameboard-wrapper");
   leftGB.appendChild(createGameboardDOM());
@@ -84,7 +94,17 @@ function renderGameboards() {
 
 function renderHompage() {
   renderInfos();
-  renderGameboards();
+  renderBlankGameboards();
+}
+
+function renderShotOnCoor(board, coordinates) {
+  const boardGotShot = document.querySelector(`.${board} .board`);
+  const shotOnCell = Array.from(
+    boardGotShot.querySelectorAll(".board-cell")
+  ).filter(
+    (cell) => cell.classList[1] == `${coordinates.x}-${coordinates.y}`
+  )[0];
+  shotOnCell.classList.add("active");
 }
 
 function renderScreen(message, screenToDisplay) {
@@ -99,4 +119,21 @@ function renderScreen(message, screenToDisplay) {
   }
 }
 
-export { renderHompage, renderScreen };
+function switchActiveBoard(boardToSwitch) {
+  const switchBoard = document.querySelector(
+    `.body > .${boardToSwitch} .board`
+  );
+  const otherBoard = document.querySelector(
+    `.body > *:not(.${boardToSwitch}) .board`
+  );
+  switchBoard.classList.add("active");
+  otherBoard.classList.remove("active");
+}
+
+export {
+  renderHompage,
+  renderScreen,
+  renderShotOnCoor,
+  renderGameboards,
+  switchActiveBoard,
+};

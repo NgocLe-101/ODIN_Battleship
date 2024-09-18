@@ -32,8 +32,14 @@ svg {
   margin-inline: auto;
 }
 
+.gameboard-wrapper:has(.board.active) {
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+  opacity: 1;
+}
+
 .gameboard-wrapper {
   padding: 1rem;
+  opacity: 0.5;
 }
 
 .board-cell {
@@ -54,11 +60,11 @@ svg {
   height: 70svh;
 }
 
-.board-cell {
+.board.active .board-cell:not(.active) {
   cursor: pointer;
 }
 
-.board-cell:hover {
+.board.active .board-cell:hover:not(.active) {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
@@ -69,6 +75,34 @@ svg {
   fill: red;
 }
 
-.board-cell svg.active {
+.board-cell.active svg {
   display: block;
+}
+
+.player-screen > * {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.symbol-indicator {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-25%);
+  transition: all 0.25s ease-in;
+}
+
+.symbol-indicator:has(~ .gameboard-wrapper > .board.active) {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.player-info-container {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.player-info-container > .name {
+  flex: 1;
 }
